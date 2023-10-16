@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.1.4</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.anita</groupId>
+	<artifactId>jOOQ-demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>jOOQ-demo</name>
+	<description>jOOQ-demo</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jooq</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.6.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.jooq</groupId>
+				<artifactId>jooq-codegen-maven</artifactId>
+				<executions>
+					<execution>
+						<id>jooq-codegen</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+
+				<configuration>
+					<!--Insert your DB configuration-->
+					<jdbc>
+						<driver>org.postgresql.Driver</driver>
+						<url>jdbc:postgresql://localhost:5432/postgres</url>
+						<user>postgres</user>
+						<password>password</password>
+					</jdbc>
+					<generator>
+						<!-- The default code generator. You can override this one, to generate your own code style.
+                         Supported generators:
+                         - org.jooq.codegen.JavaGenerator
+                         - org.jooq.codegen.KotlinGenerator
+                         - org.jooq.codegen.ScalaGenerator
+                         Defaults to org.jooq.codegen.JavaGenerator -->
+						<name>org.jooq.codegen.JavaGenerator</name>
+
+						<database>
+							<!-- The database type. The format here is:
+                            org.jooq.meta.[database].[database]Database -->
+							<name>org.jooq.meta.postgres.PostgresDatabase</name>
+
+							<!-- All elements that are generated from your schema
+                            (A Java regular expression. Use the pipe to separate several expressions)
+                            Watch out for case-sensitivity. Depending on your database, this might be important! -->
+							<includes>.*</includes>
+
+							<!-- All elements that are excluded from your schema
+                            (A Java regular expression. Use the pipe to separate several expressions).
+                            Excludes match before includes, i.e. excludes have a higher priority -->
+							<excludes></excludes>
+
+							<!-- The database schema (or in the absence of schema support, in your RDBMS this
+                            can be the owner, user, database name) to be generated -->
+							<inputSchema>test_schema</inputSchema>
+						</database>
+						<generate>
+							<pojos>true</pojos>
+							<pojosEqualsAndHashCode>true</pojosEqualsAndHashCode>
+							<javaTimeTypes>true</javaTimeTypes>
+							<fluentSetters>true</fluentSetters>
+						</generate>
+						<target>
+							<!-- The destination package of your generated classes
+                            (within the destination directory) -->
+							<packageName>model</packageName>
+
+							<!-- The destination directory of your generated classes.
+                            Using Maven directory layout here -->
+							<directory>target/generated-sources/jooq</directory>
+						</target>
+					</generator>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>
